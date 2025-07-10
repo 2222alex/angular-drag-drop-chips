@@ -1,0 +1,378 @@
+// Prevent text selection during drag
+.chip-drag-wrapper {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+// Also prevent selection on the entire app during drag
+body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+// Allow text selection only when not dragging
+body:not(.dragging) {
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
+}
+
+.main {
+    width: 50%;
+}
+
+.main-container {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.chip-list-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  border: 1px solid #ccc;
+  padding: 16px;
+  background: #fafafa;
+  min-height: 80px;
+  position: relative;
+  align-items: flex-start;
+  flex: 1;
+
+  &.invalid-format {
+    border-color: #f44336;
+    border-width: 2px;
+    background: #ffebee;
+  }
+}
+
+.validation-message {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 8px 12px;
+    color: #d32f2f;
+    font-family: 'Roboto', sans-serif;
+  
+    .error-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #f44336;
+    }
+  }
+
+  .chip-drag-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    border-radius: 16px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    min-height: 32px;
+    min-width: 40px;
+    max-width: 200px;
+    user-select: none;
+    cursor: grab;
+    transition: box-shadow 0.2s;
+    position: relative;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-touch-callout: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+// Condition chips (AND, OR, (, ))
+.chip-condition {
+    background: #e3f2fd;
+    border: 1px solid #2196f3;
+    
+    .chip-content {
+      color: #1976d2;
+      font-weight: 500;
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+      user-select: none !important;
+      -webkit-touch-callout: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+    }
+  }
+
+// ID chips (myID1, myID2, etc.)
+.chip-id {
+    background: #f5f5f5;
+    border: 1px solid #9e9e9e;
+    
+    .chip-content {
+      color: #424242;
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+      user-select: none !important;
+      -webkit-touch-callout: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+    }
+  }
+
+.chip-content {
+    flex: 1;
+    text-align: center;
+    padding: 0 12px;
+    line-height: 32px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: 'Roboto', sans-serif;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-touch-callout: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+.chip-content-with-icon {
+  padding-right: 16px;
+}
+
+.tooltip-icon {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(0, 0, 0, 0.6);
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  font-size: 12px;
+  width: 12px;
+  height: 12px;
+  line-height: 12px;
+}
+
+.chip-drag-wrapper:hover .tooltip-icon {
+  opacity: 1;
+}
+
+.chip-placeholder {
+  background: #bdbdbd;
+  opacity: 0.5;
+  border: 2px dashed #888;
+}
+
+.chip-placeholder-active.chip-id {
+  .chip-content {
+    color: white !important;
+  }
+}
+
+.chip-preview {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  pointer-events: none;
+  opacity: 0.9;
+  position: fixed;
+  z-index: 1000;
+}
+
+.trash-area {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    background: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    width: 140px;
+    flex-shrink: 0;
+    box-sizing: border-box; // Add this line
+  
+  .trash-icon {
+    color: #666;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+  
+  .trash-text {
+    color: #666;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    line-height: 1.2;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+.trash-area-active {
+  border-color: #f44336;
+  background: #ffebee;
+  
+  .trash-icon {
+    color: #f44336;
+  }
+  
+  .trash-text {
+    color: #f44336;
+  }
+}
+
+.source-boxes {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+.source-box {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    background: #fafafa;
+    box-sizing: border-box; // Add this to include padding in width calculation
+    
+    h3 {
+      margin: 0 0 12px 0;
+      font-weight: 500;
+      color: #333;
+      font-family: 'Roboto', sans-serif;
+    }
+  }
+
+.id-box {
+  flex: 1; // Take up remaining space
+}
+
+.condition-box {
+  width: 140px; // Match trash area width
+  flex-shrink: 0; // Don't shrink
+}
+
+.source-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  // Stack chips vertically when enabled
+  .source-chips.stack-chips {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    
+    .chip-drag-wrapper {
+      max-width: none; // Remove the max-width constraint
+      width: auto; // Let chips size naturally
+    }
+  }
+
+  .source-chip {
+    cursor: pointer;
+    transition: transform 0.1s ease;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-touch-callout: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+    
+    &:active {
+      cursor: pointer;
+    }
+  }
+
+.search-container {
+    margin-bottom: 12px;
+  }
+  
+  .search-field {
+    width: 100%;
+    
+    ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+      display: none;
+    }
+    
+    ::ng-deep .mat-mdc-text-field-wrapper {
+      padding: 0 12px;
+    }
+    
+    ::ng-deep .mat-mdc-form-field-infix {
+      padding: 8px 0;
+      min-height: 32px;
+    }
+    
+    input {
+      font-family: 'Roboto', sans-serif;
+    }
+  }
+  
+  .search-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 4px 0;
+    
+    .results-count {
+      color: #666;
+      font-family: 'Roboto', sans-serif;
+    }
+    
+    button {
+      min-width: auto;
+      padding: 0 8px;
+      height: 24px;
+      line-height: 24px;
+    }
+  }
+  
+  // Update source-box to accommodate search
+  .source-box {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    background: #fafafa;
+    box-sizing: border-box;
+    
+    h3 {
+      margin: 0 0 12px 0;
+      font-weight: 500;
+      color: #333;
+      font-family: 'Roboto', sans-serif;
+    }
+  }
+
+  .search-field {
+    width: 50%;
+    margin-bottom: 12px;
+  }
+
+  .clear-button-container {
+    margin-bottom: 16px;
+    display: flex;
+    
+    button {
+      font-family: 'Roboto', sans-serif;
+      
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+  }

@@ -1,0 +1,138 @@
+<div class="main">
+  <div class="clear-button-container">
+    <button 
+      mat-raised-button 
+      color="warn" 
+      (click)="clearAllChips()"
+      [disabled]="chips.length === 0"
+      matTooltip="Clear all chips and return ID chips to source"
+    >
+      <mat-icon>clear_all</mat-icon>
+      Clear All Chips
+    </button>
+  </div>
+  <div class="main-container">
+    <!-- Chip list and trash side by side -->
+    <div class="chip-list-wrapper" [class.invalid-format]="!isChipListValid">
+      <ng-container *ngFor="let chip of virtualChips; let i = index; trackBy: trackByIndex">
+        <!-- Placeholder chip (darker, shadow) - only show when NOT over trash -->
+        <ng-container *ngIf="draggingIndex !== null && placeholderIndex === i && !isOverTrash; else normalChip">
+          <div 
+            class="chip-drag-wrapper chip-placeholder chip-placeholder-active"
+            [class.chip-condition]="draggedChip?.type === 'condition'"
+            [class.chip-id]="draggedChip?.type === 'id'"
+          >
+            <div class="chip-content">{{ draggedChip?.label }}</div>
+          </div>
+        </ng-container>
+        <!-- Normal chip (not being dragged or placeholder) -->
+        <ng-template #normalChip>
+          <div
+            #chipElement
+            class="chip-drag-wrapper"
+            [class.chip-condition]="chip.type === 'condition'"
+            [class.chip-id]="chip.type === 'id'"
+            (pointerdown)="onDragStarted(i, $event)"
+            [matTooltip]="isChipTruncated(i) ? chip.label : ''"
+            matTooltipPosition="above"
+            matTooltipShowDelay="500"
+          >
+            <div 
+              class="chip-content" 
+              #chipContent
+              [class.chip-content-with-icon]="isChipTruncated(i)"
+            >{{ chip.label }}</div>
+            <mat-icon class="tooltip-icon" *ngIf="isChipTruncated(i)">help</mat-icon>
+          </div>
+        </ng-template>
+      </ng-container>
+      
+      <!-- Placeholder at end of list - only show when NOT over trash -->
+      <div
+        *ngIf="draggingIndex !== null && placeholderIndex === virtualChips.length && !isOverTrash"
+        class="chip-drag-wrapper chip-placeholder chip-placeholder-active"
+        [class.chip-condition]="draggedChip?.type === 'condition'"
+        [class.chip-id]="draggedChip?.type === 'id'"
+      >
+        <div class="chip-content">{{ draggedChip?.label }}</div>
+      </div>
+      
+      <!-- Drag preview chip (follows pointer) -->
+      <div
+        *ngIf="draggingIndex !== null && pointerOffset && pointerPosition && draggedChip"
+        class="chip-drag-wrapper chip-preview"
+        [class.chip-condition]="draggedChip.type === 'condition'"
+        [class.chip-id]="draggedChip.type === 'id'"
+        [style.left.px]="pointerPosition.x - pointerOffset.x"
+        [style.top.px]="pointerPosition.y - pointerOffset.y"
+        style="position: fixed; pointer-events: none; z-index: 1000;"
+      >
+        <div class="chip-content">{{ draggedChip.label }}</div>
+      </div>
+    </div>
+  
+    <!-- Trash area -->
+    <div 
+      class="trash-area"
+      [class.trash-area-active]="isOverTrash"
+      (pointerenter)="onTrashEnter()"
+      (pointerleave)="onTrashLeave()"
+      (pointerup)="onTrashDrop()"
+    >
+      <mat-icon class="trash-icon">delete</mat-icon>
+      <span class="trash-text">Drop here to remove</span>
+    </div>
+  </div>
+
+  <div class="validation-message" *ngIf="!isChipListValid">
+    <mat-icon class="error-icon">error</mat-icon>
+    <span>{{ validationMessage }}</span>
+  </div>
+  
+  <!-- Source boxes -->
+  <div class="source-boxes">
+    <!-- ID chips box (left side) -->
+    <div class="source-box id-box">
+      <h3>{{this.panel1Text}}</h3>
+      <!-- Search input -->
+      <mat-form-field appearance="outline" class="search-field">
+        <input
+          matInput
+          [(ngModel)]="idChipsSearchText"
+          placeholder="Type to search..."
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+      <div class="source-chips">
+        <div
+          *ngFor="let chip of filteredIdChips"
+          class="chip-drag-wrapper chip-id source-chip"
+          (click)="onChipFromBoxSelected(chip, idChips)"
+          [matTooltip]="isSourceChipTruncated(chip.label) ? chip.label : ''"
+          matTooltipPosition="above"
+          matTooltipShowDelay="500"
+        >
+          <div
+            class="chip-content"
+            [class.chip-content-with-icon]="isSourceChipTruncated(chip.label)"
+          >{{ chip.label }}</div>
+          <mat-icon class="tooltip-icon" *ngIf="isSourceChipTruncated(chip.label)">help</mat-icon>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Condition chips box (right side) -->
+    <div class="source-box condition-box">
+      <h3>{{this.panel2Text}}</h3>
+      <div class="source-chips" [class.stack-chips]="stackConditionChips">
+        <div
+          *ngFor="let chip of conditionChips"
+          class="chip-drag-wrapper chip-condition source-chip"
+          (click)="onChipFromBoxSelected(chip, conditionChips)"
+        >
+          <div class="chip-content">{{ chip.label }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
